@@ -12,7 +12,6 @@ const Login = (props) => {
 
   const navigate = useNavigate()
 
-
   const validate = () => {
     let passwordError = ''
 

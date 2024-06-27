@@ -1,13 +1,21 @@
 const mongoose = require('mongoose');
 
 const UserPass = new mongoose.Schema({
-    Customer: String,
-    PO_number : Number,
+    user:{
+        type:String, 
+        required : true, 
+        unique: true, 
+        lowercase : true, 
+    }, 
+    password :{
+        type: String, 
+        required: true, 
+    }
 
 },  { collection: 'passwords' });
 
 
-const pass = mongoose.model('passwords', UserPass);
+const User = mongoose.model('passwords', UserPass);
 
 
-module.exports = pass; 
+module.exports = User; 

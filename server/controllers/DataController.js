@@ -46,9 +46,12 @@ const fetchDataByID = async (req, res) => {
   res.json({ note });
 };
 
-const createNote = async (req, res) => {
+const createRow = async (req, res) => {
   // Create a note with it
+  const title = req.body.title; 
+  const body = req.body.body; 
   const data = await Note.create(req.body);
+
   // respond with the new note
   res.json({ data });
 };
@@ -90,7 +93,7 @@ module.exports = {
   fetchAllData,
   fetchDocumentsByWord,
   fetchDataByID,
-  createNote,
+  createRow,
   updateNote,
   deleteNote,
 };

@@ -17,6 +17,7 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 import Calendar from "./scenes/calendar/calendar";
 import LOGIN from "./scenes/login";
+import UserManager from "./scenes/usermanager";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -32,19 +33,15 @@ function App() {
             <main className="content">
               <Routes>
               <Route path="/" element={<LOGIN />} />
-
               <Route path="/login" element={<Navigate to="/" />} />
-
-
               </Routes> 
             </main>
           </div>
         </ThemeProvider>
       </ColorModeContext.Provider>
     );
+    
   } else {
-
-
   // console.log(isSidebar)
   // console.log(location.pathname)
 
@@ -62,6 +59,7 @@ function App() {
 
               <Route path="/dashboard" element = {<Dashboard />} />
               <Route path="/datasheets" element = {<DataSheets />} />
+              <Route path="/users" element = {<UserManager />} />
 
               {/* <Route path="/team" element={<Team />} />
               <Route path="/contacts" element={<Contacts />} />

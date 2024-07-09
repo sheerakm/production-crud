@@ -1,6 +1,8 @@
 
 const Note = require("../models/DataRow");
 
+const User = require("../models/userpass");
+
 const fetchAllData = async (req, res) => {
   // Find the notes
   const allData = await Note.find();
@@ -17,13 +19,10 @@ const fetchDocumentsByWord = async (req, res) => {
     $or:[
     {[field]: { $regex: value, $options: 'i' }}, 
     {[field]: { $regex: '^' + value, $options: 'i' }} 
-  
   ]};
 
 
-
   try {
-
       const documents = await Note.find(search_param);
       console.log("docuyments are:");
       console.log(documents);
@@ -74,22 +73,12 @@ const deleteNote = async (req, res) => {
   res.json({ success: "Record deleted" });
 };
 
-const login = async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const user = await User.findOne({ email, password });
-    if (user) {
-      res.status(200).json({ message: 'Login successful' });
-    } else {
-      res.status(401).json({ message: 'Invalid credentials' });
-    }
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-};
+
+
 
 module.exports = {
-  login, 
+  // getUsers,
+  // login, 
   fetchAllData,
   fetchDocumentsByWord,
   fetchDataByID,

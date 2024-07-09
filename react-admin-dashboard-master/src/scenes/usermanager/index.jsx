@@ -17,7 +17,7 @@ import {useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 
 import { DataGrid } from '@mui/x-data-grid';
-
+import  { useState, useEffect } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -26,74 +26,82 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import scroll from '../../components/scroll';
+import axios from "axios"; 
 
-
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
 
 
 export default function SignUp() {
-  const handleSubmit = (event) => {
+
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get('http://localhost:4554/users');
+      console.log("users");
+      console.log(response.data);
+      setUsers(response.data.users);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
+
+
+  const deleteUser = async (user) => {
+    try {
+      const response = await axios.delete(`http://localhost:4554/deleteuser/${user}`);
+      console.log(response.data);
+      fetchUsers();
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+
+    try {
+      // Send POST request to the backend
+      const response = await axios.post('http://localhost:4554/adduser', {
+        user: data.get('user'),
+        password: data.get('password'),
+      });
+      fetchUsers();
+      // Handle successful response
+      console.log('User registered successfully:', response.data);
+    } catch (error) {
+      // Handle error
+      console.error('Error registering user:', error);  //check if the user is already registered   TODO
+    }
+
   };
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   return (
-    <>
+  <>
     <scroll>
     <TableContainer component={Paper} sx={{ maxHeight: 540 }}>
-      <Table sx={{ minWidth: 650 }}  aria-label="a dense table">
+      <Table stickyHeader sx={{ minWidth: 650 }}  aria-label="a dense table">
         <TableHead>
           <TableRow>
-            <TableCell> Username </TableCell>
-            <TableCell align="right">Action</TableCell>
+            <TableCell sx={{ fontSize: '1.1rem', fontWeight: 'bold' }}> Username </TableCell>
+            <TableCell align="right" sx={{ fontSize: '1rem', fontWeight: 'bold' }}>Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {users.map((row) => (
             <TableRow
-              key={row.name}
+              key={row.user}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } ,
               backgroundColor: colors.primary[400],}}
-
             >
-              <TableCell component="th" scope="row">{row.name}</TableCell>
-              <TableCell align="right"><button>Delete User</button ></TableCell>
+              <TableCell component="th" scope="row">{row.user}</TableCell>
+              <TableCell align="right"><button onClick={() => deleteUser(row.user)}>Delete User</button ></TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -151,7 +159,7 @@ export default function SignUp() {
               sx={{ mt: 3, mb: 2 }}
             >
               Add User
-            </Button>
+            </Button >
           </Box>
         </Box>
       </Container>

@@ -5,7 +5,7 @@ import axios from "axios";
 
 
 const Login = (props) => {
-  const [username, setUsername] = useState('')
+  const [user, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [emailError, setEmailError] = useState('')
   const [passwordError, setPasswordError] = useState('')
@@ -31,7 +31,9 @@ const Login = (props) => {
     const isValid = validate()
     if (isValid) {
       try {
-        const response = await axios.post('http://localhost:5000/login', { username, password })
+        const response = await axios.post('http://localhost:4554/login', { user, password }, {
+          withCredentials: true, // Include credentials with the request
+        });
         if (response.status === 200) {
           navigate('/dashboard') // Navigate to the dashboard on successful login
         }
@@ -50,7 +52,7 @@ const Login = (props) => {
       <br />
       <div className={'inputContainer'}>
         <input
-          value={username}
+          value={user}
           placeholder="Enter your username here"
           onChange={(ev) => setUsername(ev.target.value)}
           className={'inputBox'}

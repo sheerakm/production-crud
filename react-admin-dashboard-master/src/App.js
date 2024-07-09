@@ -18,6 +18,7 @@ import { ColorModeContext, useMode } from "./theme";
 import Calendar from "./scenes/calendar/calendar";
 import LOGIN from "./scenes/login";
 import UserManager from "./scenes/usermanager";
+import ProtectedRoute from "./components/protected";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -68,9 +69,10 @@ function App() {
               <Route path="/bar" element={<Bar />} />
               <Route path="/pie" element={<Pie />} />
               <Route path="/line" element={<Line />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/calendar" element={<Calendar />} />
+
               <Route path="/geography" element={<Geography />} /> */}
+              <Route path="/calendar" element={<Calendar />} />
+              <Route path="/faq" element={<FAQ />} />
 
             </Routes> 
           </main>

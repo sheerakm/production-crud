@@ -33,6 +33,7 @@ import axios from "axios";
 export default function SignUp() {
 
   const [users, setUsers] = useState([]);
+  const [message, setMessage] = React.useState({ text: '', color: '' });
 
   useEffect(() => {
     fetchUsers();
@@ -72,12 +73,25 @@ export default function SignUp() {
       });
       fetchUsers();
       // Handle successful response
-      console.log('User registered successfully:', response.data);
-    } catch (error) {
-      // Handle error
-      console.error('Error registering user:', error);  //check if the user is already registered   TODO
-    }
+      setMessage({ text: 'Username was successfully added!', color: 'green' });
 
+      const element = document.getElementById('custom-id');
+
+      element.style.color = 'green';
+
+
+    } catch (error) {
+
+      if (error.response && error.response.status === 409) {
+        // User already exists
+        setMessage({ text: 'Username already exists!', color: 'red' });
+        const element = document.getElementById('custom-id');
+
+        element.style.color = 'red';
+      }
+      console.error('Error registering user:', error);  //check if the user is already registered   TODO
+      // Handle error
+    }
   };
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -109,7 +123,6 @@ export default function SignUp() {
     </TableContainer>
 </scroll>
 
-
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -127,7 +140,15 @@ export default function SignUp() {
           </Avatar>
           <Typography component="h1" variant="h5">
             Add New User
-          </Typography>
+            </Typography>
+          {message.text && (
+            <Typography
+              variant="body2"
+              sx={{ color: message.color, textAlign: 'center' }}
+            >
+              {message.text}
+            </Typography>
+          )}
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>

@@ -1,16 +1,29 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate  , useHistory, Navigate} from 'react-router-dom';
 import './login.css';
 import axios from "axios"; 
+
+import Cookies from 'js-cookie';
 
 
 const Login = (props) => {
   const [user, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [emailError, setEmailError] = useState('')
-  const [passwordError, setPasswordError] = useState('')
+  const [passwordError, setPasswordError] = useState('');
 
-  const navigate = useNavigate()
+  const token = Cookies.get('Authorization');
+  const navigate = useNavigate();
+
+  if(!!token) {
+
+    console.log(token, "token from within login");
+    // props.history.push('/dashboard');
+    navigate('/dashboard');
+  
+  }
+  
+
 
   const validate = () => {
     let passwordError = ''
@@ -36,6 +49,7 @@ const Login = (props) => {
         });
         if (response.status === 200) {
           navigate('/dashboard') // Navigate to the dashboard on successful login
+          console.log("navigated to dashboard"); 
         }
       } catch (error) {
         setEmailError('Invalid credentials')

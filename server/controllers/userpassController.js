@@ -6,6 +6,8 @@ const bcrypt = require('bcryptjs')
 async function adduser(req, res) {
     const {user, password} = req.body;
     //get usrename pass 
+    const username = await User.findOne({user});
+    if (username) return res.sendStatus(409);
 
     var salt = bcrypt.genSaltSync(10);
     var hash = bcrypt.hashSync(password, salt);
@@ -33,7 +35,7 @@ async function login(req, res) {
 
         const passwordMatch = bcrypt.compareSync(password, username.password); 
 
-        console.log(passwordMatch);
+        console.log(passwordMatch, "password match");
 
         if (!passwordMatch) return res.sendStatus(401); 
 
@@ -43,7 +45,7 @@ async function login(req, res) {
 
         res.cookie("Authorization", token, {
             expires:new Date(exp), 
-            httpOnly: true, 
+            // httpOnly: true, 
             sameSite : 'lax',
             
             secure: process.env.NODE_ENV === "production", 
